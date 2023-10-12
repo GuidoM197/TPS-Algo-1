@@ -146,11 +146,8 @@ def obtener_ganador_diagonal(tablero, gano):
     return gano
 
 def validacion_de_tablero(filas, columnas):
-    if filas.isdigit() and columnas.isdigit() and 4 <= int(filas) <= 10 and 4 <= int(columnas) <= 10:
-        filas = int(filas)
-        columnas = int(columnas)
-        return filas, columnas
-    
+    if str(filas).isdigit() and str(columnas).isdigit():
+        return 4 <= int(filas) <= 10 and 4 <= int(columnas) <= 10
 
 #A partir de esta parte estan las funciones generales.
 
@@ -173,9 +170,9 @@ def crear_tablero(n_filas: int, n_columnas: int) -> List[List[str]]:
 
     if validacion_de_tablero(n_filas, n_columnas):
         tablero = []
-        for _ in range(n_filas):
+        for _ in range(int(n_filas)):
             aux = [] 
-            for _ in range(n_columnas):
+            for _ in range(int(n_columnas)):
                 aux.append(" ")
             tablero.append(aux)
         return tablero
@@ -243,7 +240,7 @@ def insertar_simbolo(tablero: list[list[str]], columna: int) -> bool:
     count_x = 0
     count_o = 0
 
-    if not 0 <= columna < len(tablero[0]):
+    if not str(columna).isdigit() or not 0 <= int(columna) < len(tablero[0]):
         return False
     
     """Revisa si la ultima fila esta vacia, en ese caso devuelve True ya que juega X."""
@@ -265,15 +262,15 @@ def insertar_simbolo(tablero: list[list[str]], columna: int) -> bool:
     for fila in range(len(tablero)-1,-1,-1):
         
         if ultima_fila == tablero[fila]:
-            tablero[fila][columna] = "X"
+            tablero[fila][int(columna)] = "X"
             return True
 
-        if count_x > count_o and tablero[fila][columna] == " ":
-            tablero[fila][columna] = "O"
+        if count_x > count_o and tablero[fila][int(columna)] == " ":
+            tablero[fila][int(columna)] = "O"
             return True
         
-        elif count_x == count_o and tablero[fila][columna] == " ":
-            tablero[fila][columna] = "X"
+        elif count_x == count_o and tablero[fila][int(columna)] == " ":
+            tablero[fila][int(columna)] = "X"
             return True
         
     return False
@@ -353,4 +350,3 @@ def graficar_tablero(tablero):
 
     for i in range(len(tablero)):
         print("|" + "|".join(tablero[i]) + "|")
-

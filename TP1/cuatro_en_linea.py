@@ -7,7 +7,8 @@ def verificar_contiguos(lista, ficha):
     for i in range(len(lista)):
         if i+3>len(lista)-1:
             break
-        if son_cuatro_contiguos(lista, i, ficha):
+
+        if son_cuatro_contiguos(lista, i, ficha): 
             return True
         
     return False
@@ -48,10 +49,10 @@ def verificar_contiguos_diagonales(lista, ficha):
 
     for j in range(len(lista)):
         for i in range(len(lista[j])):
-            if i+3>len(lista[j])-1: 
-                break
-            if son_cuatro_contiguos_diagonales(lista, i, j, ficha): 
-                return True
+                
+            if i+3>len(lista[j])-1: break
+
+            if son_cuatro_contiguos_diagonales(lista, i, j, ficha): return True
             
     return False
 
@@ -145,37 +146,15 @@ def obtener_ganador_diagonal(tablero, gano):
 
     return gano
 
-def validacion_de_tablero(filas, columnas):
-    if str(filas).isdigit() and str(columnas).isdigit():
-        return 4 <= int(filas) <= 10 and 4 <= int(columnas) <= 10
+def validacion_de_jugada(jugada):
 
+    if jugada.isdigit(): return int(jugada)
+
+    elif jugada == "s": return jugada
+
+    return "False" #Como existe la columna 0, no puedo devolver "False" ya que es la interpretacion binaria del 0.
+    
 #A partir de esta parte estan las funciones generales.
-
-def crear_tablero(n_filas: int, n_columnas: int) -> List[List[str]]:
-    """Crea un nuevo tablero de cuatro en línea, con dimensiones
-    n_filas por n_columnas.
-    Para todo el módulo `cuatro_en_linea`, las cadenas reconocidas para los
-    valores de la lista de listas son las siguientes:
-        - Celda vacía: ' '
-        - Celda con símbolo X: 'X'
-        - Celda con símbolo O: 'O'
-
-    PRECONDICIONES:
-        - n_filas y n_columnas son enteros positivos mayores a tres.
-
-    POSTCONDICIONES:
-        - la función devuelve un nuevo tablero lleno de casilleros vacíos
-          que se puede utilizar para llamar al resto de las funciones del
-          módulo."""
-
-    if validacion_de_tablero(n_filas, n_columnas):
-        tablero = []
-        for _ in range(int(n_filas)):
-            aux = [] 
-            for _ in range(int(n_columnas)):
-                aux.append(" ")
-            tablero.append(aux)
-        return tablero
 
 def es_turno_de_x(tablero: List[List[str]]) -> bool:
     """Dado un tablero, devuelve True si el próximo turno es de X. Si, en caso
@@ -196,25 +175,22 @@ def es_turno_de_x(tablero: List[List[str]]) -> bool:
     
     count_x = 0
     count_o = 0
-
+        
     """Revisa todo el tablero y hace un recuento de X y O para verificar quien fue el ultimo jugador."""
+
     for fil in range(len(tablero)):
         for col in range(len(tablero[fil])):
             if tablero[fil][col] == "X":
                 count_x += 1
-
-    for fil in range(len(tablero)):
-        for col in range(len(tablero[fil])):
-            if tablero[fil][col] == "O":
+            elif tablero[fil][col] == "O":
                 count_o += 1
 
+
     """Despues de revisar el tablero pregunta si hay mas X que O, en ese caso devuelve False, en el caso de que sean iguales devuelve True."""
-    if count_x > count_o:
-        print(f"Juega O, ingrese una columna del 0 al " + str(len(tablero[0])-1) + ": ")
-        return False
-    elif count_x == count_o:
-        print(f"Juega X, ingrese una columna del 0 al " + str(len(tablero[0])-1) + ": ")
-        return True
+
+    if count_x > count_o: return False
+
+    elif count_x == count_o: return True
 
 def insertar_simbolo(tablero: list[list[str]], columna: int) -> bool:
 
@@ -236,42 +212,23 @@ def insertar_simbolo(tablero: list[list[str]], columna: int) -> bool:
     en el de que si este en el rango, revisa toda la columna desde la ultima fila a la primera y si 
     encuentra un espacio "vacio" devuelve True, en el caso que todos ya esten ocupados devuelven False"""
 
-    ultima_fila = []
-    count_x = 0
-    count_o = 0
-
-    if not str(columna).isdigit() or not 0 <= int(columna) < len(tablero[0]):
+    if not 0 <= columna or columna >= len(tablero[0]):
         return False
-    
-    """Revisa si la ultima fila esta vacia, en ese caso devuelve True ya que juega X."""
-    for i in range(len(tablero[0])):
-        if tablero[len(tablero)-1][i] == " ":
-            ultima_fila.append(tablero[len(tablero)-1][i])  
-            
-    """Revisa todo el tablero y hace un recuento de X y O para verificar quien fue el ultimo jugador."""
-    for fil in range(len(tablero)):
-        for col in range(len(tablero[fil])):
-            if tablero[fil][col] == "X":
-                count_x += 1
 
-    for fil in range(len(tablero)):
-        for col in range(len(tablero[fil])):
-            if tablero[fil][col] == "O":
-                count_o += 1
+    if es_turno_de_x(tablero):
 
-    for fila in range(len(tablero)-1,-1,-1):
-        
-        if ultima_fila == tablero[fila]:
-            tablero[fila][int(columna)] = "X"
-            return True
+        for fila in range(len(tablero)-1,-1,-1):
+                   
+            if tablero[fila][columna] == " ":
+                tablero[fila][columna] = "X"
+                return True
+    else:
 
-        if count_x > count_o and tablero[fila][int(columna)] == " ":
-            tablero[fila][int(columna)] = "O"
-            return True
-        
-        elif count_x == count_o and tablero[fila][int(columna)] == " ":
-            tablero[fila][int(columna)] = "X"
-            return True
+        for fila in range(len(tablero)-1,-1,-1):
+
+            if tablero[fila][columna] == " ":
+                tablero[fila][columna] = "O"
+                return True
         
     return False
 
@@ -287,10 +244,26 @@ def tablero_completo(tablero: List[List[str]]) -> bool:
     tablero_lleno = []
 
     for columna in range(len(tablero[0])):
+
         tablero_lleno.append(tablero[0][columna])
-    if not " " in tablero_lleno:
-        return True
-    return False
+        if " " in tablero_lleno:
+            return False
+        
+    return True
+
+def verificar_ganador(tablero, ganador):
+
+    diagonal = obtener_ganador_diagonal(tablero, ganador)
+
+    vertical = obtener_ganador_vertical(tablero, ganador)
+
+    horizontal = obtener_ganador_horizontal(tablero, ganador)
+
+    if diagonal == "X" or vertical == "X" or horizontal == "X": return "X"
+
+    if diagonal == "O" or vertical == "O" or horizontal == "O": return "O"
+
+    return ganador
 
 def obtener_ganador(tablero: List[List[str]]) -> str:
     """Dado un tablero, devuelve el símbolo que ganó el juego.
@@ -315,38 +288,45 @@ def obtener_ganador(tablero: List[List[str]]) -> str:
             [' ', 'O', 'O', 'X', 'X', 'X', 'O'],
         ]
     """
-
     ganador = " "
 
-    if obtener_ganador_horizontal(tablero, ganador) == "X":
-        return "X"
-    elif obtener_ganador_horizontal(tablero, ganador) == "O":
-        return "O"
-    elif obtener_ganador_vertical(tablero, ganador) == "X":
-        return "X"
-    elif obtener_ganador_vertical(tablero, ganador) == "O":
-        return "O"
-    elif obtener_ganador_diagonal(tablero, ganador) == "X":
-        return "X"
-    elif obtener_ganador_diagonal(tablero, ganador) == "O":
-        return "O"
-
+    if verificar_ganador(tablero, ganador) == "X": return "X"
+    
+    if verificar_ganador(tablero, ganador) == "O": return "O"
+    
     return ganador
 
-def graficar_tablero(tablero):
+def validacion_de_tablero(filas, columnas):
 
-    indices = []
-    separacion = "".ljust(len(tablero[0])*2, "_") + "_"
+    if filas.isdigit() and columnas.isdigit() and 4 <= int(filas) <= 10 and 4 <= int(columnas) <= 10:
+        filas = int(filas)
+        columnas = int(columnas)
+        return filas, columnas
+    
+    return False
 
-    for i in range(len(tablero[0])):
-        indices.append(str(i))
-    print("")
+def crear_tablero(n_filas: int, n_columnas: int) -> List[List[str]]:
+    """Crea un nuevo tablero de cuatro en línea, con dimensiones
+    n_filas por n_columnas.
+    Para todo el módulo `cuatro_en_linea`, las cadenas reconocidas para los
+    valores de la lista de listas son las siguientes:
+        - Celda vacía: ' '
+        - Celda con símbolo X: 'X'
+        - Celda con símbolo O: 'O'
 
-    print("|" + "|".join(indices) + "|")
+    PRECONDICIONES:
+        - n_filas y n_columnas son enteros positivos mayores a tres.
 
-    print(separacion)
+    POSTCONDICIONES:
+        - la función devuelve un nuevo tablero lleno de casilleros vacíos
+          que se puede utilizar para llamar al resto de las funciones del
+          módulo."""
+    
+    tablero = []
 
-    print("")
-
-    for i in range(len(tablero)):
-        print("|" + "|".join(tablero[i]) + "|")
+    for _ in range(n_filas):
+        aux = [] 
+        for _ in range(n_columnas):
+            aux.append(" ")
+        tablero.append(aux)
+    return tablero

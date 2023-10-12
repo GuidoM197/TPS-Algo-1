@@ -3,7 +3,7 @@ import sys
 import traceback
 from typing import List
 
-import cuatro_en_linea
+import optimizacion_4_en_linea
 
 # Si las pruebas se ven mal en tu terminal, probá cambiando el valor
 # de esta constante a True para desactivar los colores ANSI.
@@ -61,7 +61,7 @@ def test_01_representacion_simple():
         [" ", " ", " ", " ", " ", " "],
         [" ", " ", " ", " ", " ", " "],
     ]
-    tablero = cuatro_en_linea.crear_tablero(6, 6)
+    tablero = optimizacion_4_en_linea.crear_tablero(6, 6)
     validar_estado(desc, tablero)
 
 
@@ -74,15 +74,15 @@ def test_02_representacion_rectangular():
         [" ", " ", " ", " ", " ", " ", " "],
         [" ", " ", " ", " ", " ", " ", " "],
     ]
-    tablero = cuatro_en_linea.crear_tablero(5, 7)
+    tablero = optimizacion_4_en_linea.crear_tablero(5, 7)
     validar_estado(desc, tablero)
 
 
 def test_03_juego_inicial_comienza_x():
     """Crea un nuevo juego 5x7 y valida el comportamiento de `es_turno_de_x` para
     el estado inicial."""
-    tablero = cuatro_en_linea.crear_tablero(5, 7)
-    assert cuatro_en_linea.es_turno_de_x(tablero), (
+    tablero = optimizacion_4_en_linea.crear_tablero(5, 7)
+    assert optimizacion_4_en_linea.es_turno_de_x(tablero), (
         "`es_turno_de_x` devolvió `False` cuando debería devolver `True`. "
         "Estado actual:\n"
         f"{pprint.pformat(tablero)}\n"
@@ -102,14 +102,14 @@ def test_04_insertar_una_vez():
         [" ", " ", " ", " ", " ", " ", " "],
         [" ", " ", " ", "X", " ", " ", " "],
     ]
-    tablero = cuatro_en_linea.crear_tablero(5, 7)
-    assert cuatro_en_linea.insertar_simbolo(tablero, 3), (
+    tablero = optimizacion_4_en_linea.crear_tablero(5, 7)
+    assert optimizacion_4_en_linea.insertar_simbolo(tablero, 3), (
         "`insertar_simbolo` devolvió `False` cuando debería devolver `True`. "
         "Estado actual:\n"
         f"{pprint.pformat(tablero)}\n"
     )
     validar_estado(desc, tablero)
-    assert not cuatro_en_linea.es_turno_de_x(tablero), (
+    assert not optimizacion_4_en_linea.es_turno_de_x(tablero), (
         "`es_turno_de_x` devolvió `True` cuando debería devolver `False`. "
         "Estado actual:\n"
         f"{pprint.pformat(tablero)}\n"
@@ -130,11 +130,11 @@ def test_05_insertar_dos_veces():
         [" ", " ", " ", " ", " ", " ", " "],
         [" ", " ", "O", "X", " ", " ", " "],
     ]
-    tablero = cuatro_en_linea.crear_tablero(5, 7)
-    cuatro_en_linea.insertar_simbolo(tablero, 3)
-    cuatro_en_linea.insertar_simbolo(tablero, 2)
+    tablero = optimizacion_4_en_linea.crear_tablero(5, 7)
+    optimizacion_4_en_linea.insertar_simbolo(tablero, 3)
+    optimizacion_4_en_linea.insertar_simbolo(tablero, 2)
     validar_estado(desc, tablero)
-    assert cuatro_en_linea.es_turno_de_x(tablero), (
+    assert optimizacion_4_en_linea.es_turno_de_x(tablero), (
         "`es_turno_de_x` devolvió `False` cuando debería devolver `True`. "
         "Estado actual:\n"
         f"{pprint.pformat(tablero)}\n"
@@ -148,12 +148,12 @@ def test_06_mantener_dos_juegos_en_paralelo():
     Si falla esta prueba, probablemente se estén usando variables globales en
     alguna parte del código realizado, prohibido por el enunciado del TP1.
     """
-    tablero1 = cuatro_en_linea.crear_tablero(5, 5)
-    cuatro_en_linea.insertar_simbolo(tablero1, 3)
+    tablero1 = optimizacion_4_en_linea.crear_tablero(5, 5)
+    optimizacion_4_en_linea.insertar_simbolo(tablero1, 3)
 
-    tablero2 = cuatro_en_linea.crear_tablero(5, 6)
-    cuatro_en_linea.insertar_simbolo(tablero2, 2)
-    cuatro_en_linea.insertar_simbolo(tablero2, 1)
+    tablero2 = optimizacion_4_en_linea.crear_tablero(5, 6)
+    optimizacion_4_en_linea.insertar_simbolo(tablero2, 2)
+    optimizacion_4_en_linea.insertar_simbolo(tablero2, 1)
 
     desc1 = [
         [" ", " ", " ", " ", " "],
@@ -169,11 +169,11 @@ def test_06_mantener_dos_juegos_en_paralelo():
         [" ", " ", " ", " ", " ", " "],
         [" ", "O", "X", " ", " ", " "],
     ]
-    assert not cuatro_en_linea.es_turno_de_x(tablero1), (
+    assert not optimizacion_4_en_linea.es_turno_de_x(tablero1), (
         "`es_turno_de_x` devolvió `True` cuando debería devolver `False`. "
         "¿Se están usando variables globales en el código?"
     )
-    assert cuatro_en_linea.es_turno_de_x(tablero2), (
+    assert optimizacion_4_en_linea.es_turno_de_x(tablero2), (
         "`es_turno_de_x` devolvió `False` cuando debería devolver `True`. "
         "¿Se están usando variables globales en el código?"
     )
@@ -195,12 +195,12 @@ def test_07_insertar_tres_veces_con_superposicion():
         [" ", " ", " ", "O", " ", " ", " "],
         [" ", " ", " ", "X", " ", " ", " "],
     ]
-    tablero = cuatro_en_linea.crear_tablero(5, 7)
-    cuatro_en_linea.insertar_simbolo(tablero, 3)
-    cuatro_en_linea.insertar_simbolo(tablero, 3)
-    cuatro_en_linea.insertar_simbolo(tablero, 3)
+    tablero = optimizacion_4_en_linea.crear_tablero(5, 7)
+    optimizacion_4_en_linea.insertar_simbolo(tablero, 3)
+    optimizacion_4_en_linea.insertar_simbolo(tablero, 3)
+    optimizacion_4_en_linea.insertar_simbolo(tablero, 3)
     validar_estado(desc, tablero)
-    assert not cuatro_en_linea.es_turno_de_x(tablero), (
+    assert not optimizacion_4_en_linea.es_turno_de_x(tablero), (
         "`es_turno_de_x` devolvió `True` cuando debería devolver `False`. "
         "Estado actual:\n"
         f"{pprint.pformat(tablero)}\n"
@@ -218,15 +218,15 @@ def test_08_insertar_todas_las_columnas():
         [" ", " ", " ", " ", " ", " ", " "],
         ["X", "O", "X", "O", "X", "O", "X"],
     ]
-    tablero = cuatro_en_linea.crear_tablero(5, 7)
+    tablero = optimizacion_4_en_linea.crear_tablero(5, 7)
     for col in range(len(tablero[0])):
-        assert cuatro_en_linea.insertar_simbolo(tablero, col), (
+        assert optimizacion_4_en_linea.insertar_simbolo(tablero, col), (
             "`insertar_simbolo` devolvió `False` cuando deberia devolver `True`. "
             "Estado actual:\n"
             f"{pprint.pformat(tablero)}\n"
         )
     validar_estado(desc, tablero)
-    assert not cuatro_en_linea.es_turno_de_x(tablero), (
+    assert not optimizacion_4_en_linea.es_turno_de_x(tablero), (
         "`es_turno_de_x` devolvió `True` cuando debería devolver `False`. "
         "Estado actual:\n"
         f"{pprint.pformat(tablero)}\n"
@@ -245,9 +245,9 @@ def test_09_insertar_en_columnas_invalidas():
         [" ", " ", " ", " ", " ", " ", " "],
         [" ", " ", " ", " ", " ", " ", " "],
     ]
-    tablero = cuatro_en_linea.crear_tablero(5, 7)
+    tablero = optimizacion_4_en_linea.crear_tablero(5, 7)
     for col in (-1, 10, 7, -15):
-        assert not cuatro_en_linea.insertar_simbolo(tablero, col), (
+        assert not optimizacion_4_en_linea.insertar_simbolo(tablero, col), (
             f"`insertar_simbolo` para columna={col} devolvió `True`. "
             "Estado actual:\n"
             f"{pprint.pformat(tablero)}\n"
@@ -268,14 +268,14 @@ def test_10_insertar_hasta_saturar_columna():
         [" ", " ", " ", "O", " ", " ", " "],
         [" ", " ", " ", "X", " ", " ", " "],
     ]
-    tablero = cuatro_en_linea.crear_tablero(5, 7)
+    tablero = optimizacion_4_en_linea.crear_tablero(5, 7)
     for _ in range(5):
-        assert cuatro_en_linea.insertar_simbolo(tablero, 3), (
+        assert optimizacion_4_en_linea.insertar_simbolo(tablero, 3), (
             f"`insertar_simbolo` devolvió `False` cuando debería devolver `True`. "
             "Estado actual:\n"
             f"{pprint.pformat(tablero)}\n"
         )
-    assert not cuatro_en_linea.insertar_simbolo(tablero, 3), (
+    assert not optimizacion_4_en_linea.insertar_simbolo(tablero, 3), (
         f"`insertar_simbolo` devolvió `True` cuando debería devolver `False`. "
         "Estado actual:\n"
         f"{pprint.pformat(tablero)}\n"
@@ -286,17 +286,17 @@ def test_10_insertar_hasta_saturar_columna():
 def test_11_tablero_completo():
     """Crea un nuevo juego 5x5 e inserta símbolos hasta saturar todo el tablero.
     Valida el retorno de la función `juego_terminado`."""
-    tablero = cuatro_en_linea.crear_tablero(5, 5)
+    tablero = optimizacion_4_en_linea.crear_tablero(5, 5)
     for _ in range(5):
         for col in range(5):
-            assert not cuatro_en_linea.tablero_completo(tablero), (
+            assert not optimizacion_4_en_linea.tablero_completo(tablero), (
                 f"`tablero_completo` devolvió `True` cuando debería devolver `False`. "
                 "Estado actual:\n"
                 f"{pprint.pformat(tablero)}\n"
             )
-            cuatro_en_linea.insertar_simbolo(tablero, col)
+            optimizacion_4_en_linea.insertar_simbolo(tablero, col)
 
-    assert cuatro_en_linea.tablero_completo(tablero), (
+    assert optimizacion_4_en_linea.tablero_completo(tablero), (
         f"`tablero_completo` devolvió `False` cuando debería devolver `True`. "
         "Estado actual:\n"
         f"{pprint.pformat(tablero)}\n"
@@ -307,18 +307,18 @@ def test_12_obtener_ganador_horizontal():
     """Crea un nuevo juego 5x5 e inserta los símbolos necesarios para que X
     gane el juego por un cuatro en línea en la fila inferior.
     Asegura que `obtener_ganador` devuelva lo correcto en cada paso."""
-    tablero = cuatro_en_linea.crear_tablero(5, 5)
+    tablero = optimizacion_4_en_linea.crear_tablero(5, 5)
     for col in range(3):
-        assert cuatro_en_linea.obtener_ganador(tablero) == " ", (
+        assert optimizacion_4_en_linea.obtener_ganador(tablero) == " ", (
             f"`obtener_ganador` no devolvió \" \". "
             "Estado actual:\n"
             f"{pprint.pformat(tablero)}\n"
         )
         for _ in range(2):
-            cuatro_en_linea.insertar_simbolo(tablero, col)
+            optimizacion_4_en_linea.insertar_simbolo(tablero, col)
 
-    cuatro_en_linea.insertar_simbolo(tablero, 3)
-    assert cuatro_en_linea.obtener_ganador(tablero) == "X", (
+    optimizacion_4_en_linea.insertar_simbolo(tablero, 3)
+    assert optimizacion_4_en_linea.obtener_ganador(tablero) == "X", (
         f"`obtener_ganador` no devolvió \"X\". "
         "Estado actual:\n"
         f"{pprint.pformat(tablero)}\n"
@@ -329,17 +329,17 @@ def test_13_obtener_ganador_vertical():
     """Crea un nuevo juego 5x5 e inserta los símbolos necesarios para que O
     gane el juego por un cuatro en línea en la columna derecha.
     Asegura que `obtener_ganador` devuelva lo correcto en cada paso."""
-    tablero = cuatro_en_linea.crear_tablero(5, 5)
+    tablero = optimizacion_4_en_linea.crear_tablero(5, 5)
     for i in range(4):
-        assert cuatro_en_linea.obtener_ganador(tablero) == " ", (
+        assert optimizacion_4_en_linea.obtener_ganador(tablero) == " ", (
             f"`obtener_ganador` no devolvió \" \". "
             "Estado actual:\n"
             f"{pprint.pformat(tablero)}\n"
         )
-        cuatro_en_linea.insertar_simbolo(tablero, (i % 3) + 1)
-        cuatro_en_linea.insertar_simbolo(tablero, 0)
+        optimizacion_4_en_linea.insertar_simbolo(tablero, (i % 3) + 1)
+        optimizacion_4_en_linea.insertar_simbolo(tablero, 0)
 
-    assert cuatro_en_linea.obtener_ganador(tablero) == "O", (
+    assert optimizacion_4_en_linea.obtener_ganador(tablero) == "O", (
         f"`obtener_ganador` no devolvió \"O\". "
         "Estado actual:\n"
         f"{pprint.pformat(tablero)}\n"
@@ -351,19 +351,19 @@ def test_14_obtener_ganador_diagonal():
     gane el juego por un cuatro en línea en una diagonal de abajo a la
     derecha hacia arriba a la izquierda.
     Asegura que `obtener_ganador` devuelva lo correcto en cada paso."""
-    tablero = cuatro_en_linea.crear_tablero(5, 5)
+    tablero = optimizacion_4_en_linea.crear_tablero(5, 5)
     for i in range(4):
-        assert cuatro_en_linea.obtener_ganador(tablero) == " ", (
+        assert optimizacion_4_en_linea.obtener_ganador(tablero) == " ", (
             f"`obtener_ganador` no devolvió \" \". "
             "Estado actual:\n"
             f"{pprint.pformat(tablero)}\n"
         )
         for j in range(i + 1):
-            if j == i and not cuatro_en_linea.es_turno_de_x(tablero):
-                cuatro_en_linea.insertar_simbolo(tablero, 4)
-            cuatro_en_linea.insertar_simbolo(tablero, 4 - i)
+            if j == i and not optimizacion_4_en_linea.es_turno_de_x(tablero):
+                optimizacion_4_en_linea.insertar_simbolo(tablero, 4)
+            optimizacion_4_en_linea.insertar_simbolo(tablero, 4 - i)
 
-    assert cuatro_en_linea.obtener_ganador(tablero) == "X", (
+    assert optimizacion_4_en_linea.obtener_ganador(tablero) == "X", (
         f"`obtener_ganador` no devolvió \"X\". "
         "Estado actual:\n"
         f"{pprint.pformat(tablero)}\n"
@@ -375,19 +375,19 @@ def test_15_obtener_ganador_diagonal_inversa():
     gane el juego por un cuatro en línea en una diagonal de abajo a la
     izquierda hacia arriba a la derecha.
     Asegura que `obtener_ganador` devuelva lo correcto en cada paso."""
-    tablero = cuatro_en_linea.crear_tablero(5, 5)
+    tablero = optimizacion_4_en_linea.crear_tablero(5, 5)
     for i in range(4):
-        assert cuatro_en_linea.obtener_ganador(tablero) == " ", (
+        assert optimizacion_4_en_linea.obtener_ganador(tablero) == " ", (
             f"`obtener_ganador` no devolvió \" \". "
             "Estado actual:\n"
             f"{pprint.pformat(tablero)}\n"
         )
         for j in range(i + 1):
-            if j == i and not cuatro_en_linea.es_turno_de_x(tablero):
-                cuatro_en_linea.insertar_simbolo(tablero, 0)
-            cuatro_en_linea.insertar_simbolo(tablero, i)
+            if j == i and not optimizacion_4_en_linea.es_turno_de_x(tablero):
+                optimizacion_4_en_linea.insertar_simbolo(tablero, 0)
+            optimizacion_4_en_linea.insertar_simbolo(tablero, i)
 
-    assert cuatro_en_linea.obtener_ganador(tablero) == "X", (
+    assert optimizacion_4_en_linea.obtener_ganador(tablero) == "X", (
         f"`obtener_ganador` no devolvió \"X\". "
         "Estado actual:\n"
         f"{pprint.pformat(tablero)}\n"
@@ -484,7 +484,7 @@ def main():
         print(
             "TIP: Si la información de arriba no es suficiente para entender "
             "el error, revisá el código de las pruebas que fallaron en el "
-            "archivo cuatro_en_linea_tes.py."
+            "archivo optimizacion_4_en_linea_tes.py."
         )
 
 
