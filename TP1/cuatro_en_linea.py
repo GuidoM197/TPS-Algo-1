@@ -212,8 +212,7 @@ def insertar_simbolo(tablero: list[list[str]], columna: int) -> bool:
     en el de que si este en el rango, revisa toda la columna desde la ultima fila a la primera y si 
     encuentra un espacio "vacio" devuelve True, en el caso que todos ya esten ocupados devuelven False"""
 
-    if not 0 <= columna or columna >= len(tablero[0]):
-        return False
+    if not 0 <= columna or columna >= len(tablero[0]): return False
 
     if es_turno_de_x(tablero):
 
