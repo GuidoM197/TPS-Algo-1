@@ -1,5 +1,40 @@
 from random import choice, choices
 
+def opcion_1(ruta, palabras, guardado):
+    """
+    Lee el archivo y genera un diccionario con todas las palabras y las veces que se repitieron, como "key" lleva el nombre del contacto
+    para asi identificar las veces que el contacto repitio las palabras.
+    """
+
+    palabras = palabras.lower().split()
+    res = {}
+    try:
+        with open(ruta) as origen, open(guardado, "w") as destino:
+
+            for fila in origen:
+                mensaje = fila.lower().split()
+                persona = mensaje[3]
+
+                if ":" in persona:
+                    persona = persona[0].upper() + persona[1:].rstrip(":")
+                    res[persona] = res.get(persona, {})
+                else:
+                    continue
+
+                for palabra in palabras:
+                    res[persona][palabra] = res[persona].get(palabra, 0)
+                    if palabra in mensaje:
+                        res[persona][palabra] += 1
+
+            for contacto in res.keys(): #Solucion momentanea, ver como intercalar contactos entre palabra y palabra
+                for i, j in res[contacto].items():
+                    destino.write(f"{contacto}, {i}, {j}\n")
+
+            print("Reporte generado!")
+
+    except FileNotFoundError as e:
+        print(f"FileNotFoundError: {e}")
+
 def recoleccion_de_datos(ruta): # Crea un diccionario que va juntando las palabras y las siguientes con sus ocurrencias.
     """
     Se lee linea por linea identificando los contactos y los mensajes que manda cada uno, luego de esto devuelve un diccionario
@@ -52,9 +87,6 @@ def recoleccion_de_datos(ruta): # Crea un diccionario que va juntando las palabr
         
     except FileNotFoundError as e:
         print(f"FileNotFoundError: {e}")
-    
-#recoleccion_de_datos("/home/guido/Escritorio/Algoritmos y Programaciòn 1/TPS-Algo-1/TP2/Chat_de_Android_de_Friends.txt")
-
 
 def generador_de_palabras(diccionario, contacto):
     """
@@ -95,7 +127,6 @@ def generador_de_palabras(diccionario, contacto):
     return " ".join(palabra_final)
 
 def mostrar_contactos(diccionario):
-
     for i, contacto in enumerate(diccionario.keys()):
         print(i, "-" ,contacto)
 
