@@ -1,40 +1,11 @@
-def contar_ocurrencias(palabra, lista):
-    indice = 0
-    contador = 0
+from random import choice, choices
+
+def recoleccion_de_datos(ruta): # Crea un diccionario que va juntando las palabras y las siguientes con sus ocurrencias.
+    """
+    Se lee linea por linea identificando los contactos y los mensajes que manda cada uno, luego de esto devuelve un diccionario
+    con las palabras que utlizaron y sus ocurrencias.
+    """
     
-    for i in range(len(lista)):
-        if palabra == lista[i]:
-            contador += 1
-            if contador == 1:
-                indice = i
-
-    return (indice, contador)
-
-def opcion_2(ruta):
-    res = {}
-
-    with open(ruta) as f:
-
-        for linea in f:
-            mensaje = linea.lower().split()
-            mensaje = mensaje[3:]
-            contacto = mensaje[0]
-
-            if "<Multimedia omitido>" in mensaje: continue
-
-            if ":" in contacto:
-                contacto = contacto[0].upper() + contacto[1:].rstrip(":")
-                res[contacto] = res.get(contacto, {})
-            else:
-                continue
-
-            for palabra in mensaje:
-                res[contacto][palabra] = res[contacto].get(palabra, ())
-                if palabra in mensaje:
-                    res[contacto][palabra][0] += 1
-                res[contacto][palabra]
-                
-def op2(ruta):
     res = {}
 
     with open(ruta) as f:
@@ -44,7 +15,8 @@ def op2(ruta):
             contacto = mensaje[3]
             mensaje = mensaje[4:]
 
-            if "<Multimedia omitido>" in mensaje: continue
+            if "<multimedia" in mensaje[0]: #No salta a la proxima iteracion, corregir!
+                continue
 
             if ":" in contacto:
                 contacto = contacto[0].upper() + contacto[1:].rstrip(":")
@@ -54,37 +26,70 @@ def op2(ruta):
             
             count = 0
             for palabra in mensaje:
+
+                res[contacto][palabra] = res[contacto].get(palabra, {}) # AGrego la palabra donde estoy parado
+
                 count += 1
 
-                res[contacto][palabra] = res[contacto].get(palabra, [0, {}])
-                e = res[contacto][palabra][1]
-                res[contacto][palabra][0] += 1
+                if count < len(mensaje):
+                    mensaje_siguiente = mensaje[count]
 
-                if palabra in res[contacto] and count < len(mensaje):
-                    res[contacto][palabra][1] = e.get(mensaje[count], 0) + 1
+                if not mensaje_siguiente in res[contacto][palabra] and mensaje_siguiente != palabra:
+                    res[contacto][palabra][mensaje_siguiente] = res[contacto][palabra].get(mensaje_siguiente, 0) + 1 #Agrego la palabra siguiente y le sumo su primera aparicion
 
-        print(res)
+                if mensaje_siguiente in res[contacto][palabra] and mensaje_siguiente != palabra:
+                    res[contacto][palabra][mensaje_siguiente] += 1
+                
+        return res
 
-def op(ruta):
-    res = {}
+def selector_de_palabras(diccionario, contacto):
+    """
+    Recibe el diccionario de la funcion de "recoleccion_de_datos" y un contacto, luego filtra en base al contacto pasado para utilizar unicamente
+    sus palabras y asi generar un mensaje pseudo-aleatorio del mismo.
+    """
 
-    with open(ruta) as f:
+    lista = []
+    peso = []
+    palabra_final = []
 
-        for linea in f:
-            mensaje = linea.lower().split()
-            contacto = mensaje[3]
-            mensaje = mensaje[4:]
+    for nombre in diccionario.keys():
+        if nombre != contacto: continue
 
-            if "<Multimedia omitido>" in mensaje: continue
+        for palabra in diccionario[nombre]:
+            lista.append(palabra)
+        
+        while True:
 
-            if ":" in contacto:
-                contacto = contacto[0].upper() + contacto[1:].rstrip(":")
-                res[contacto] = res.get(contacto, {})
-            else:
-                continue
+            palabra_actual = choice(lista)
+
+            palabra_final.append(palabra_actual)
+            lista.clear()
+            peso.clear()
+
+            for palabras, ocurrencias in diccionario[nombre][palabra_actual].items():
+                if palabras != "fin de texto":
+                    lista.append(palabras)
+                    peso.append(ocurrencias)                    
+
+                if palabras == "fin de texto":
+                    lista.append(".")
+
             
-            dic_ocurrecias = {palabra: contar_ocurrencias(palabra, mensaje) for palabra in mensaje}
+            if peso == [] or palabra_actual == ".": 
+                lista.remove(".")
+                break
+
+            palabra_actual = choices(lista, peso, k=1) #k=1 para que solo devuelva 1 puesto, el mas grande (boca).
+
+
+    return " ".join(palabra_final)
+
+def mostrar_contactos(diccionario):
+    for i, contacto in enumerate(diccionario.keys()):
+        print(i, "-" ,contacto)
+
+def op2(diccionario, contacto):
+    print(selector_de_palabras(diccionario, contacto))
             
             
-             
-#op("ejemplo.txt")
+#op2("ejemplo.txt")
