@@ -134,3 +134,18 @@ def validador_de_entrada(cadena, diccionario):
 
     except TypeError as msg_error:
         print(f"TypeError: {msg_error}")
+
+# def identificador_de_usuarios(diccionario, mensaje, palabras):
+
+#     persona = mensaje[3]
+#     linea = mensaje[4:]
+
+#     if ":" in persona:
+#         persona = persona[0].upper() + persona[1:].rstrip(":")
+#         diccionario[persona] = diccionario.get(persona, {})
+    
+#         for palabra in palabras:
+#             diccionario[persona][palabra] = diccionario[persona].get(palabra, 0)
+#             if palabra in linea:
+#                 diccionario[persona][palabra] += 1
+

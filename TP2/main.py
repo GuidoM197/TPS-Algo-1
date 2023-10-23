@@ -18,6 +18,7 @@ def main():
 
     while True:
 
+        print("")
         print("Bienvenido!")
         print("1) Busqueda de palabras.")
         print("2) Generar un mensaje pseudo-aleatorio.")
@@ -26,9 +27,10 @@ def main():
         opcion = input("Ingrese una de las siguentes opciones porfavor: ")
 
         if opcion == "1":
-            palabras = input("Ingrese una oracion para contar las palabras en ella: ")
-            guardado = input("Ingrese el archivo destino para guardar el reporte: ")
-            logica.opcion_1(chat, palabras, guardado)
+
+                palabras = input("Ingrese una oracion para contar las palabras en ella: ")
+                guardado = input("Ingrese el archivo destino para guardar el reporte: ")
+                logica.opcion_1(chat, palabras, guardado)
 
         if opcion == "2":
             mostrar_contactos(datos)
@@ -42,14 +44,14 @@ def main():
                     print("Coloque un contacto valido.")
                     continue
 
-                palabra_aleatoria = logica.generador_de_palabras(datos, contacto)
+                palabra_aleatoria = logica.opcion_2(datos, contacto)
 
                 print(f"{contacto}: {palabra_aleatoria}")
 
                 break
 
         if opcion == "3":
-            print("Hasta luego!", end ="")
-            break
+            print("Hasta luego!")
+            return
 
 main()
