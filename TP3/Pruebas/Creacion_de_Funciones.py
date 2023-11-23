@@ -2,6 +2,36 @@ import random
 from pila import Pila
 from cola import Cola
 
+def copiar_pila(origen):
+    aux = Pila()
+    copia = Pila()
+
+    while not origen.esta_vacia():
+
+        aux.apilar(origen.desapilar())
+
+
+    while not aux.esta_vacia():
+
+        dato = aux.ver_tope()
+        copia.apilar(dato)
+        origen.apilar(dato)
+        aux.desapilar()
+
+    return copia
+    
+
+def verificar_existencia(pila, movimiento):
+    copia = pila
+    act = copia.ver_tope()
+
+    while not copia.esta_vacia():
+        if act == movimiento: return True
+        act = copia.desapilar()
+    
+    return False
+
+
 def _cambiar_color(matriz, i, j, color_nuevo, anterior):
     if i == len(matriz) or matriz[i][j] == color_nuevo: return
 
@@ -169,8 +199,10 @@ class JuegoFlood:
         self.pasos_solucion = Cola()
 
         # Parte 3: Agregar atributos a la clase...
-        self.pila_deshacer = Pila()
-        self.pila_rehacer = Pila()
+        self.clon = self.flood.clonar() # Busco el tablero original
+        self.pila_rehacer = Pila() 
+        self.pila_deshacer = Pila() 
+        self.puede_rehacer = False
 
 
     def cambiar_color(self, color):
@@ -182,7 +214,7 @@ class JuegoFlood:
         Argumentos:
             color (int): Nuevo color a seleccionar
         """
-        # Parte 3: Modificar el código...
+        # Parte 3: Modificar el código... 
 
         self.n_movimientos += 1
 
@@ -190,10 +222,14 @@ class JuegoFlood:
 
         self.flood.cambiar_color(color)
 
-        # if not self.pasos_solucion.esta_vacia() and self.pasos_solucion.ver_frente() == color:
-        #     self.pasos_solucion.desencolar()
-        # else:
-        #     self.pasos_solucion = cola()
+        movimiento_actual = self.flood.clonar()
+
+        if not self.pila_rehacer.esta_vacia() and not verificar_existencia(copiar_pila(self.pila_deshacer), movimiento_actual):
+            self.pila_rehacer = Pila()
+            print(f'Deshacer despues del nuevo mov: {self.pila_deshacer} \n')
+            print(f'Rehacer despues del nuevo mov: {self.pila_rehacer} \n')
+
+        self.puede_rehacer = False
 
 
     def deshacer(self):
@@ -204,14 +240,17 @@ class JuegoFlood:
         # Parte 3: cambiar el `return` por tu código...
         if self.pila_deshacer.esta_vacia(): return 
 
-        dato = self.pila_deshacer.tope.dato
-        self.flood.grilla = dato
+        ultimo_deshecho = self.pila_deshacer.ver_tope()
 
-        if self.pila_rehacer.esta_vacia():
-            self.pila_rehacer.apilar(self.flood.clonar())
+        print(f'Deshacer antes: {self.pila_deshacer} \n')
+
+        self.flood.grilla = self.pila_deshacer.ver_tope()
 
         self.pila_rehacer.apilar(self.pila_deshacer.desapilar())
 
+        print(f'Deshacer despues: {self.pila_deshacer} \n')
+
+        self.puede_rehacer = True
         self.n_movimientos -= 1
         self.pasos_solucion = Cola()
 
@@ -222,16 +261,15 @@ class JuegoFlood:
         estructuras para deshacer y rehacer.
         """
         # Parte 3: cambiar el `return` por tu código...
-        if self.pila_rehacer.esta_vacia(): return
+        if self.pila_rehacer.esta_vacia() or self.puede_rehacer == False: return
 
-        print(self.pila_rehacer.tope.dato) 
+        print(f'Rehacer antes: {self.pila_rehacer} \n')
 
-        # if self.pila_deshacer.esta_vacia():
-        #     self.pila_rehacer.desapilar()
+        self.flood.grilla = self.pila_rehacer.ver_tope()
 
-        self.flood.grilla = self.pila_rehacer.tope.dato 
+        self.pila_deshacer.apilar(self.pila_rehacer.desapilar())
 
-        self.pila_deshacer.apilar(self.pila_rehacer.desapilar()) 
+        print(f'Rehacer despues: {self.pila_rehacer} \n')
 
         self.n_movimientos += 1
         self.pasos_solucion = Cola()
@@ -253,7 +291,7 @@ def main():
          [0,1,2,2],
          [0,1,1,2],]
     
-    print(juegoflood.flood)
+    print(juegoflood)
 
     juegoflood.cambiar_color(1)
     juegoflood.cambiar_color(2)
@@ -262,37 +300,13 @@ def main():
     juegoflood.deshacer()
     juegoflood.deshacer()
 
-
-
-    juegoflood.rehacer()
     juegoflood.rehacer()
     juegoflood.rehacer()
 
+    juegoflood.deshacer()
 
-    # print(juegoflood)
-    # print(juegoflood.deshacer())
+    juegoflood.cambiar_color(3)
 
-    # print(juegoflood)
-    
-    # print(m)
-    
-    # print(m)
-    
-    # _cambiar_color(m, 0, 0, 2, 1)
-    # print(m)
+    juegoflood.rehacer()
 
 main()
-
-# def main2():
-#     pila = Pila()
-
-#     m = [[0,1,1,0],
-#          [0,2,1,2],
-#          [0,1,2,2],
-#          [0,1,1,2],]
-    
-#     pila.apilar(m)
-#     dato = pila.tope.dato
-#     print(dato)
-
-# main2()

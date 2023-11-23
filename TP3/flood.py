@@ -4,7 +4,7 @@ def _cambiar_color(matriz, i, j, color_nuevo, anterior):
     if i == len(matriz) or matriz[i][j] == color_nuevo: return
 
     if matriz[i][j] == anterior and j < len(matriz[0]): 
-        matriz[i][j] = color_nuevo  
+        matriz[i][j] = color_nuevo 
         
         if not (j + 1) == len(matriz[0]):
             _cambiar_color(matriz, i, j+1, color_nuevo, anterior)
@@ -20,6 +20,24 @@ def contar_colores(contador, n_colores):
     for _ in n_colores:
         contador += 1
     return contador
+
+
+def recorrer_matriz_recur(matriz):
+    color_actual = matriz[0][0]
+    return _recorrer_matriz_recu(matriz, 0, 0, color_actual)
+
+
+def _recorrer_matriz_recu(matriz, i, j, color_actual):
+    if i == len(matriz): return True
+
+    if j == len(matriz[0]):
+        return _recorrer_matriz_recu(matriz, i+1, 0, color_actual)
+
+    if i < len(matriz) and j < len(matriz[0]): 
+        if matriz[i][j] != color_actual: return False
+
+    return _recorrer_matriz_recu(matriz, i, j+1, color_actual)
+
 
 class Flood:
     """
@@ -38,6 +56,7 @@ class Flood:
         self.ancho = ancho
         self.colores = 0
         self.grilla = []
+
 
         for _ in range(self.alto):
             aux = [] 
@@ -118,7 +137,7 @@ class Flood:
         """
         # Parte 2: Tu código acá...
         anterior = self.grilla[0][0]
-        return _cambiar_color(self.grilla, 0, 0, color_nuevo, anterior)
+        _cambiar_color(self.grilla, 0, 0, color_nuevo, anterior)
 
 
     def clonar(self):
@@ -141,4 +160,4 @@ class Flood:
             bool: True si toda la grilla tiene el mismo color
         """
         # Parte 4: Tu código acá...
-        return False
+        return recorrer_matriz_recur(self.grilla)

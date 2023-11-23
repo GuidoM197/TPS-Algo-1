@@ -5,6 +5,7 @@ class Pila:
         Inicializa una nueva pila, vacía
         '''
         self.tope = None
+        self.length = 0 #ELIMINAR
 
     def apilar(self, dato):
         '''
@@ -12,6 +13,7 @@ class Pila:
         '''
         nodo = _Nodo(dato, self.tope)
         self.tope = nodo
+        self.length += 1 # ELIMINAR
 
     def desapilar(self):
         '''
@@ -24,6 +26,7 @@ class Pila:
             raise ValueError("pila vacía")
         dato = self.tope.dato
         self.tope = self.tope.prox
+        self.length -= 1 # ELIMINAR
         return dato
 
     def ver_tope(self):
@@ -52,6 +55,9 @@ class Pila:
                 res += " <- "
             act = act.prox
         return res + " <| fondo"
+    
+    def __len__(self):
+        return self.length
 
 
 class _Nodo:
