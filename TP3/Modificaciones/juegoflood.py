@@ -46,56 +46,117 @@ def verificar_existencia(pila, movimiento):
     return False
 
 
-def encontrar_max(diccionario):
-    '''
-    Devuelve el color que se repite mas veces.
-    '''
-    maximo = 0
-    cantidad_veces_max = 0
+# def encontrar_max(diccionario):
+#     '''
+#     Devuelve el color que se repite mas veces.
+#     '''
+#     maximo = 0
+#     cantidad_veces_max = 0
 
-    for color in diccionario:
-        if diccionario[color] > cantidad_veces_max:
-            maximo = color
-            cantidad_veces_max = diccionario[color]
+#     for color in diccionario:
+#         if diccionario[color] > cantidad_veces_max:
+#             maximo = color
+#             cantidad_veces_max = diccionario[color]
 
-    return maximo
-
-
-def busqueda_mayor_ocurrencia(matriz, diccionario, i, j):
-    color = matriz[i][j]
-    return _busqueda_mayor_ocurrencia(matriz, diccionario, i, j, color)
+#     return maximo
 
 
-def _busqueda_mayor_ocurrencia(matriz, diccionario, i, j, color):
-    if matriz[i][j] != color: return diccionario
+# def _busqueda_mayor_ocurrencia(matriz, diccionario, i, j, color, visitados):
+#     if matriz[i][j] != color: return
     
-    if matriz[i][j] != matriz[0][0]: #Compruebo no estar teniendo como posibilidad el color base
-        diccionario[color] = diccionario.get(color, 0) + 1 #agrego el color y la cantidad que hay adyacentes
+#     if (matriz[i][j] != matriz[0][0]) and ((i, j) not in visitados): #Compruebo no estar teniendo como posibilidad el color base
+#         visitados.add((i, j))
+#         diccionario[color] = diccionario.get(color, 0) + 1 #Agrego el color y la cantidad que hay adyacentes
 
-        if not (j + 1) == len(matriz[0]):
-            _busqueda_mayor_ocurrencia(matriz, diccionario, i, j+1, color) #Busco si esta ese mismo color a su derecha
+#         if (not (j + 1) == len(matriz[0])) and ((i, j+1) not in visitados):
+#             _busqueda_mayor_ocurrencia(matriz, diccionario, i, j+1, color, visitados) #Busco si esta ese mismo color a su derecha
 
-        if not (i + 1) == len(matriz):
-            _busqueda_mayor_ocurrencia(matriz, diccionario, i+1, j, color) #Busco si esta ese mismo color a su abajo
+#         if (not (i + 1) == len(matriz)) and ((i+1, j) not in visitados):
+#             _busqueda_mayor_ocurrencia(matriz, diccionario, i+1, j, color, visitados) #Busco si esta ese mismo color debajo
         
-        return diccionario #Para este punto ya puedo devolver el diccionario
+#         if (not (j - 1) == len(matriz[0])) and ((i, j-1) not in visitados):
+#             _busqueda_mayor_ocurrencia(matriz, diccionario, i, j-1, color, visitados) #Busco si esta ese mismo color a su izquierda
 
-    if not (j + 1) == len(matriz[0]): #Si el color es el mismo en la coordenada actual busco un slot mas a la derecha del actual
-        color = matriz[i][j+1]
-        _busqueda_mayor_ocurrencia(matriz, diccionario, i, j+1, color)
+#         if (not (i - 1) == len(matriz)) and ((i-1, j) not in visitados):
+#             _busqueda_mayor_ocurrencia(matriz, diccionario, i-1, j, color, visitados) #Busco si esta ese mismo color arriba
 
-    if not (i + 1) == len(matriz): #Si el color es el mismo en la coordenada actual busco un slot mas abajo
-        color = matriz[i+1][j]
-        _busqueda_mayor_ocurrencia(matriz, diccionario, i+1, j, color)
+#         return
+
+
+# def busqueda_mejor_mov(matriz):
+#     res = {}
+#     visitados = set()
+#     posibles_colores = []
+
+#     for fil in range(len(matriz)):
+#         for col in range(len(matriz[0])):
+#             if matriz[fil][col] != matriz[0][0]:
+#                 posibles_colores.append((fil, col))
+#                 break
+    
+#     for posible_color in posibles_colores:
+#         i, j = posible_color
+#         _busqueda_mayor_ocurrencia(matriz, res, i, j, matriz[i][j], visitados)
+    
+#     return res
+
+        
+def comparar_casilleros(actual, copia):
+    casilleros_diferentes = 0
+
+    for fil in range(len(actual.grilla)):
+        for col in range(len(actual.grilla[fil])):
+            if copia.grilla[fil][col] != actual.grilla[fil][col]: 
+                casilleros_diferentes += 1
+
+        
+    return casilleros_diferentes
+
+
+def buscar(matriz, color_acutal):
+    posibles_colores = {}
+
+    for i in range(len(matriz)):
+        for j in range(len(matriz[0])):
+            if matriz[i][j] != color_acutal: 
+                posibles_colores[matriz[i][j]] = posibles_colores.get(matriz[i][j], 0) + 1
+                break
+    
+    return posibles_colores
+
+
+def comparacion_de_casilleros(copia, colores):
+    actual = copia.clonar()
+    aux = copia.clonar()
+    tamaño_colores = {}
+    color_final = -1
+
+    for color in colores:
+        
+        _cambiar_color(aux.grilla, 0, 0, color, aux.grilla[0][0])
+        _cambiar_color(aux.grilla, 0, 0, -1, aux.grilla[0][0])
+        tamaño_colores[color] = tamaño_colores.get(color, 0) + comparar_casilleros(actual, aux)
+        aux = actual.clonar()
+
+    tuplas = list(tamaño_colores.items())
+
+    max = tuplas[0]
+
+    for key, value in tuplas:
+        if value > max[1]: 
+            color_final = key
+        else:
+            color_final = tuplas[0][0]
+
+    return color_final
 
 
 def busqueda_mejor_mov(matriz):
 
-    colores = busqueda_mayor_ocurrencia(matriz) #Arranco a buscar por derecha
+    colores = buscar(matriz.grilla, matriz.grilla[0][0])
 
-    return encontrar_max(colores)
+    return comparacion_de_casilleros(matriz, colores)
 
-        
 
 class JuegoFlood:
     """
@@ -235,7 +296,7 @@ class JuegoFlood:
 
         while not copia.esta_completado():
 
-            mejor_mov = busqueda_mejor_mov(copia.grilla)
+            mejor_mov = busqueda_mejor_mov(copia)
             _cambiar_color(copia.grilla, 0, 0, mejor_mov, copia.grilla[0][0])
             max_movimientos += 1
             pasos_aux.encolar(mejor_mov)

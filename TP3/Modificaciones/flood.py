@@ -38,17 +38,14 @@ class Flood:
         self.alto = alto
         self.ancho = ancho
         self.colores = 0
-        self.grilla = [[1,0,1,2],
-          [2,0,2,1],
-          [2,0,1,3],
-          [1,4,4,4]] 
+        self.grilla = []
 
 
-        # for _ in range(self.alto):
-        #     aux = [] 
-        #     for _ in range(self.ancho):
-        #         aux.append("0")
-        #     self.grilla.append(aux)
+        for _ in range(self.alto):
+            aux = [] 
+            for _ in range(self.ancho):
+                aux.append("0")
+            self.grilla.append(aux)
         
     def __len__(self): return self.alto
     
