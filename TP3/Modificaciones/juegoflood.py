@@ -2,103 +2,6 @@ from flood import Flood, _cambiar_color
 from pila import Pila
 from cola import Cola
 
-def copiar_pila(origen):
-    aux = Pila()
-    res = Pila()
-
-    while not origen.esta_vacia():
-
-        aux.apilar(origen.desapilar())
-
-
-    while not aux.esta_vacia():
-
-        dato = aux.ver_tope()
-        res.apilar(dato)
-        origen.apilar(dato)
-        aux.desapilar()
-
-    return res
-
-
-def vaciar_pila(pila):
-    act = pila.ver_tope()
-
-    while act != None:
-        pila.desapilar()
-        if pila.esta_vacia(): 
-            return
-        act = pila.ver_tope()
-
-
-def verificar_existencia(pila, movimiento):
-    '''
-    Compueba la existencia de un movimiento en la pila, devuelve False, si no lo encuentra de lo contrario, True.
-    '''
-    copia = pila
-    if copia.esta_vacia(): return
-    act = copia.ver_tope()
-
-    while not copia.esta_vacia():
-        if act == movimiento: return True
-        act = copia.desapilar()
-    
-    return False
-
-
-def encontrar_max(diccionario):
-    '''
-    Devuelve el color que se repite mas veces.
-    '''
-    maximo = 0
-    cantidad_veces_max = 0
-
-    for color in diccionario:
-        if diccionario[color] > cantidad_veces_max:
-            maximo = color
-            cantidad_veces_max = diccionario[color]
-
-    return maximo
-
-
-def _busqueda_mayor_ocurrencia(matriz, diccionario, i, j, color, visitados):
-    if matriz[i][j] != color: return
-    
-    if (matriz[i][j] != matriz[0][0]) and ((i, j) not in visitados): #Compruebo no estar teniendo como posibilidad el color base
-        visitados.add((i, j))
-        diccionario[color] = diccionario.get(color, 0) + 1 #Agrego el color y la cantidad que hay adyacentes
-
-        if (not (j + 1) == len(matriz[0])) and ((i, j+1) not in visitados):
-            _busqueda_mayor_ocurrencia(matriz, diccionario, i, j+1, color, visitados) #Busco si esta ese mismo color a su derecha
-
-        if (not (i + 1) == len(matriz)) and ((i+1, j) not in visitados):
-            _busqueda_mayor_ocurrencia(matriz, diccionario, i+1, j, color, visitados) #Busco si esta ese mismo color debajo
-        
-        if (not (j - 1) == len(matriz[0])) and ((i, j-1) not in visitados):
-            _busqueda_mayor_ocurrencia(matriz, diccionario, i, j-1, color, visitados) #Busco si esta ese mismo color a su izquierda
-
-        if (not (i - 1) == len(matriz)) and ((i-1, j) not in visitados):
-            _busqueda_mayor_ocurrencia(matriz, diccionario, i-1, j, color, visitados) #Busco si esta ese mismo color arriba
-
-        return
-
-
-# def busqueda_mejor_mov(matriz):
-#     res = {}
-#     visitados = set()
-#     posibles_colores = []
-
-#     for fil in range(len(matriz)):
-#         for col in range(len(matriz[0])):
-#             if matriz[fil][col] != matriz[0][0]:
-#                 posibles_colores.append((fil, col))
-#                 break
-    
-#     for posible_color in posibles_colores:
-#         i, j = posible_color
-#         _busqueda_mayor_ocurrencia(matriz, res, i, j, matriz[i][j], visitados)
-    
-#     return res
 def es_adyacente_al_actual(matriz, i, j, actual):
     abajo = (i < len(matriz) - 1 and matriz[i+1][j] == actual)
     derecha = (j < len(matriz[0]) - 1 and matriz[i][j+1] == actual)
@@ -107,6 +10,7 @@ def es_adyacente_al_actual(matriz, i, j, actual):
 
     return abajo or derecha or arriba or izquierda
         
+
 def comparar_casilleros(actual, copia):
     casilleros_diferentes = 0
 
@@ -308,8 +212,6 @@ class JuegoFlood:
 
         
         return max_movimientos, pasos_aux
-        return 999, Cola()
-
 
 
     def hay_proximo_paso(self):
@@ -352,6 +254,3 @@ class JuegoFlood:
 
     def esta_completado(self):
         return self.flood.esta_completado()
-
-flood = JuegoFlood(4, 4, 5)
-print(busqueda_mejor_mov(flood.flood))

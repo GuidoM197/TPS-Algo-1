@@ -22,23 +22,6 @@ def contar_colores(contador, n_colores):
     return contador
 
 
-def recorrer_matriz_recur(matriz):
-    color_actual = matriz[0][0]
-    return _recorrer_matriz_recu(matriz, 0, 0, color_actual)
-
-
-def _recorrer_matriz_recu(matriz, i, j, color_actual):
-    if i == len(matriz): return True
-
-    if j == len(matriz[0]):
-        return _recorrer_matriz_recu(matriz, i+1, 0, color_actual)
-
-    if i < len(matriz) and j < len(matriz[0]): 
-        if matriz[i][j] != color_actual: return False
-
-    return _recorrer_matriz_recu(matriz, i, j+1, color_actual)
-
-
 class Flood:
     """
     Clase para administrar un tablero de N colores.
@@ -146,9 +129,18 @@ class Flood:
             Flood: Copia del Flood actual
         """
         # Parte 3: Tu código acá...
-        copia = []
+        fil, col = self.dimensiones()
+
+        copia = Flood(fil, col)
+
+        copia.grilla = []
+
         for fila in self.grilla:
-            copia.append(fila.copy())
+            aux = []
+            for columna in fila:
+                aux.append(columna)
+            copia.grilla.append(aux)
+            
         return copia
 
 
@@ -160,4 +152,9 @@ class Flood:
             bool: True si toda la grilla tiene el mismo color
         """
         # Parte 4: Tu código acá...
-        return recorrer_matriz_recur(self.grilla)
+
+        for i in self.grilla:
+            for j in i:
+                if j != self.grilla[0][0]: return False
+        return True
+
