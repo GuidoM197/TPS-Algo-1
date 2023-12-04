@@ -19,7 +19,6 @@ def comparar_casilleros(actual, copia):
             if copia.grilla[fil][col] != actual.grilla[fil][col]: 
                 casilleros_diferentes += 1
 
-    print(f'casilleros: {casilleros_diferentes} \n')
     return casilleros_diferentes
 
 
@@ -31,7 +30,6 @@ def buscar(matriz, color_acutal):
             if matriz[i][j] != color_acutal and es_adyacente_al_actual(matriz, i, j, matriz[0][0]): 
                 posibles_colores[matriz[i][j]] = posibles_colores.get(matriz[i][j], 0) + 1
 
-    print(f'psobles colores: {posibles_colores} \n')
     return posibles_colores
 
 
@@ -56,7 +54,6 @@ def comparacion_de_casilleros(copia, colores):
         if value > max[1]: 
             color_final = key
 
-    print(f'color elegido: {color_final} \n')
     return color_final
 
 
@@ -90,7 +87,8 @@ class JuegoFlood:
 
         # Parte 3: Agregar atributos a la clase...
 
-        self.tablero_inicial = self.flood.clonar()
+        self.tablero_inicial = self.flood.clonar().grilla
+        self.ultimo_flood_jugado = self.flood.clonar().grilla
 
         self.pila_rehacer = Pila() 
         self.pila_deshacer = Pila() 
@@ -110,9 +108,9 @@ class JuegoFlood:
         """
         # Parte 3: Modificar el código... 
 
-        anterior = self.flood.clonar()
+        anterior = self.flood.clonar().grilla
 
-        self.pila_deshacer.apilar(anterior.grilla)
+        self.pila_deshacer.apilar(anterior)
 
         self.flood.cambiar_color(color)
 
@@ -125,11 +123,10 @@ class JuegoFlood:
         if not self.pasos_solucion.esta_vacia() and self.pasos_solucion.ver_frente() == color: 
             self.pasos_solucion.desencolar() 
 
-
         else: 
             self.pasos_solucion = Cola() 
 
-        self.pila_rehacer = Pila()
+        self.pila_rehacer = Pila() #Por cada mov pila_rehacer se reinicia
         self.puede_rehacer = False
         self.n_movimientos += 1 
             
@@ -143,13 +140,13 @@ class JuegoFlood:
         if self.pila_deshacer.esta_vacia(): return 
 
 
-        if self.pila_rehacer.esta_vacia(): #Se agrega el flood actual si esta vacia ya que deshacer agarra el movimiento anterior, no el ultimo. con esto se arregla el problema.
+        if self.pila_rehacer.esta_vacia():
             self.pila_rehacer.apilar(self.flood.grilla)
 
 
         if self.pila_deshacer.ver_tope() == self.flood.grilla:
             self.pila_deshacer.desapilar()
-
+        
 
         if not self.pila_deshacer.esta_vacia():
             
@@ -159,8 +156,8 @@ class JuegoFlood:
             self.puede_rehacer = True
             self.n_movimientos -= 1
             self.pasos_solucion = Cola()
+        
 
-    
     def rehacer(self):
         """
         Rehace el movimiento que fue deshecho si existe, manejando las
@@ -169,19 +166,22 @@ class JuegoFlood:
         # Parte 3: cambiar el `return` por tu código...
         if self.pila_rehacer.esta_vacia() or self.puede_rehacer == False: return
 
-
+        
         if self.pila_deshacer.esta_vacia():
             self.pila_deshacer.apilar(self.flood.grilla)
         
 
-        if self.pila_rehacer.ver_tope() == self.flood.grilla or self.pila_rehacer.ver_tope() == self.tablero_inicial:
+        if self.pila_rehacer.ver_tope() == self.flood.grilla:
+            self.pila_deshacer.apilar(self.pila_rehacer.desapilar())
+
+
+        if self.pila_rehacer.ver_tope() == self.tablero_inicial:
             self.pila_deshacer.apilar(self.pila_rehacer.desapilar())
         
 
         if not self.pila_rehacer.esta_vacia():
             self.flood.grilla = self.pila_rehacer.ver_tope()
             self.pila_deshacer.apilar(self.pila_rehacer.desapilar())
-
 
         self.n_movimientos += 1
         self.pasos_solucion = Cola()

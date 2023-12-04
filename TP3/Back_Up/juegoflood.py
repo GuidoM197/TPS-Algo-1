@@ -167,6 +167,7 @@ class JuegoFlood:
 
         if not self.pasos_solucion.esta_vacia() and self.pasos_solucion.ver_frente() == color: 
             self.pasos_solucion.desencolar() 
+            
         else: 
             self.pasos_solucion = Cola() 
 
@@ -242,19 +243,20 @@ class JuegoFlood:
             Cola: Pasos utilizados para llegar a dicha solución
         """
         #Parte 4: tu código acá...
-        copia = self.flood.clonar()
-        max_movimientos = 0
-        pasos_aux = Cola()
+        # copia = self.flood.clonar()
+        # max_movimientos = 0
+        # pasos_aux = Cola()
 
-        while not matriz_completa(copia):
+        # while not matriz_completa(copia):
 
-            mejor_mov = busqueda_mejor_mov(copia)
-            _cambiar_color(copia, 0, 0, mejor_mov, copia[0][0])
-            max_movimientos += 1
-            pasos_aux.encolar(mejor_mov)
+        #     mejor_mov = busqueda_mejor_mov(copia)
+        #     _cambiar_color(copia, 0, 0, mejor_mov, copia[0][0])
+        #     max_movimientos += 1
+        #     pasos_aux.encolar(mejor_mov)
 
         
-        return max_movimientos, pasos_aux
+        # return max_movimientos, pasos_aux
+        return 999, Cola()
 
 
 
