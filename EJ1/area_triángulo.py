@@ -23,4 +23,3 @@ def calcular_area_triangulo(x1,y1,z1,x2,y2,z2,x3,y3,z3):
 assert calcular_area_triangulo(5, 8, -1, -2, 3, 4, -3, 3, 0) == 19.45507645834372
 assert calcular_area_triangulo(10, 8, -11, -2, 35, 54, -31, 3, 0) == 1428.7111324547031
 assert calcular_area_triangulo(15, 82, 0, -14, 4, 24, -2, 3, 0) == 1083.1095281641649
-
