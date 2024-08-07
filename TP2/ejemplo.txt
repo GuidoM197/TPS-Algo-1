@@ -1,5 +1,0 @@
-1 2 3 Guido: Hola como estas?
-1 2 3 Doly: Bien, vos como estas?
-1 2 3 Guido: Bien, vos como andas?
-1 2 3 Guido: <Multimedia omitido>
-1 2 3 Guido: Bien, vos como andas?
